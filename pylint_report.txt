@@ -1,0 +1,22 @@
+************* Module vulnerable_app
+vulnerable_app.py:27:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:39:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:47:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:56:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:64:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:68:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+vulnerable_app.py:75:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:86:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:89:4: W0702: No exception type(s) specified (bare-except)
+vulnerable_app.py:86:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+vulnerable_app.py:97:0: C0413: Import "import random" should be placed at the top of the module (wrong-import-position)
+vulnerable_app.py:98:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:108:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:111:8: C0415: Import outside toplevel (traceback) (import-outside-toplevel)
+vulnerable_app.py:108:22: W0613: Unused argument 'e' (unused-argument)
+vulnerable_app.py:10:0: W0611: Unused import os (unused-import)
+vulnerable_app.py:13:0: W0611: Unused import re (unused-import)
+
+-----------------------------------
+Your code has been rated at 6.38/10
+

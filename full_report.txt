@@ -1,0 +1,246 @@
+======================================
+   SECURE CODING REVIEW - FULL REPORT
+   Author: Muntaha Ghafoor
+   CodeAlpha Internship - Task 3
+   Platform: Kali Linux on VMware
+======================================
+
+=== BANDIT SCAN RESULTS ===
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.13.12
+Run started:2026-06-11 07:50:05.599570
+Files in scope (1):
+	./vulnerable_app.py (score: {SEVERITY: 51, CONFIDENCE: 88})
+Files excluded (0):
+
+Test results:
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: ./vulnerable_app.py:11:0
+10	import os
+11	import subprocess
+12	import pickle
+
+--------------------------------------------------
+>> Issue: [B403:blacklist] Consider possible security implications associated with pickle module.
+   Severity: Low   Confidence: High
+   CWE: CWE-502 (https://cwe.mitre.org/data/definitions/502.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/blacklists/blacklist_imports.html#b403-import-pickle
+   Location: ./vulnerable_app.py:12:0
+11	import subprocess
+12	import pickle
+13	import re
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'admin123'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b105_hardcoded_password_string.html
+   Location: ./vulnerable_app.py:18:16
+17	# ============================================================
+18	DB_PASSWORD   = "admin123"          # Hardcoded database password
+19	SECRET_KEY    = "mysecretkey"       # Hardcoded secret key
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'mysecretkey'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b105_hardcoded_password_string.html
+   Location: ./vulnerable_app.py:19:16
+18	DB_PASSWORD   = "admin123"          # Hardcoded database password
+19	SECRET_KEY    = "mysecretkey"       # Hardcoded secret key
+20	ADMIN_USER    = "admin"
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'password'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b105_hardcoded_password_string.html
+   Location: ./vulnerable_app.py:21:16
+20	ADMIN_USER    = "admin"
+21	ADMIN_PASS    = "password"          # Plaintext hardcoded credential
+22	
+
+--------------------------------------------------
+>> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.
+   Severity: Medium   Confidence: Low
+   CWE: CWE-89 (https://cwe.mitre.org/data/definitions/89.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b608_hardcoded_sql_expressions.html
+   Location: ./vulnerable_app.py:31:12
+30	    # VULNERABLE: Direct string formatting — attacker can inject SQL
+31	    query = "SELECT * FROM users WHERE username = '" + username + "'"
+32	    cursor.execute(query)
+
+--------------------------------------------------
+>> Issue: [B324:hashlib] Use of weak MD5 hash for security. Consider usedforsecurity=False
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b324_hashlib.html
+   Location: ./vulnerable_app.py:41:11
+40	    # VULNERABLE: MD5 is cryptographically broken
+41	    return hashlib.md5(password.encode()).hexdigest()
+42	
+
+--------------------------------------------------
+>> Issue: [B602:subprocess_popen_with_shell_equals_true] subprocess call with shell=True identified, security issue.
+   Severity: High   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b602_subprocess_popen_with_shell_equals_true.html
+   Location: ./vulnerable_app.py:49:13
+48	    # VULNERABLE: User input passed directly to shell
+49	    result = subprocess.call("ping -c 1 " + hostname, shell=True)
+50	    return result
+
+--------------------------------------------------
+>> Issue: [B301:blacklist] Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.
+   Severity: Medium   Confidence: High
+   CWE: CWE-502 (https://cwe.mitre.org/data/definitions/502.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/blacklists/blacklist_calls.html#b301-pickle
+   Location: ./vulnerable_app.py:58:11
+57	    # VULNERABLE: pickle.loads on untrusted data allows RCE
+58	    return pickle.loads(data)
+59	
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/plugins/b110_try_except_pass.html
+   Location: ./vulnerable_app.py:89:4
+88	        return a / b
+89	    except:
+90	        # VULNERABLE: Catches all exceptions, hides real errors
+91	        pass
+92	
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.7.10/blacklists/blacklist_calls.html#b311-random
+   Location: ./vulnerable_app.py:100:15
+99	    # VULNERABLE: random is not cryptographically secure
+100	    return str(random.randint(100000, 999999))
+101	
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 53
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 7
+		Medium: 2
+		High: 2
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 1
+		Medium: 3
+		High: 7
+Files skipped (0):
+
+=== PYLINT ANALYSIS ===
+************* Module vulnerable_app
+vulnerable_app.py:27:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:39:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:47:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:56:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:64:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:68:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+vulnerable_app.py:75:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:86:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:89:4: W0702: No exception type(s) specified (bare-except)
+vulnerable_app.py:86:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+vulnerable_app.py:97:0: C0413: Import "import random" should be placed at the top of the module (wrong-import-position)
+vulnerable_app.py:98:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:108:0: C0116: Missing function or method docstring (missing-function-docstring)
+vulnerable_app.py:111:8: C0415: Import outside toplevel (traceback) (import-outside-toplevel)
+vulnerable_app.py:108:22: W0613: Unused argument 'e' (unused-argument)
+vulnerable_app.py:10:0: W0611: Unused import os (unused-import)
+vulnerable_app.py:13:0: W0611: Unused import re (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 6.38/10 (previous run: 6.38/10, +0.00)
+
+
+=== CUSTOM AST SCANNER ===
+
+======================================================================
+  SECURE CODE REVIEW — SCAN RESULTS
+  File: vulnerable_app.py
+  Total Vulnerabilities Found: 9
+======================================================================
+
+  🔴 HIGH:   6
+  🟡 MEDIUM: 2
+  🟢 LOW:    1
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-01 — Hardcoded Credentials  (CWE-798)
+  📍 Line 18: DB_PASSWORD   = "admin123"          # Hardcoded database password
+  ⚠  Sensitive credential stored directly in source code. If the repo is public, attackers gain immediate access.
+  ✅  FIX: Store secrets in environment variables or a vault (e.g. python-dotenv, AWS Secrets Manager).
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-03 — Weak Cryptographic Hash (MD5)  (CWE-327)
+  📍 Line 41: return hashlib.md5(password.encode()).hexdigest()
+  ⚠  MD5 is cryptographically broken. Passwords hashed with MD5/SHA1 can be cracked in seconds using rainbow tables.
+  ✅  FIX: Use bcrypt, argon2, or hashlib.pbkdf2_hmac with salt: import bcrypt; bcrypt.hashpw(password, bcrypt.gensalt())
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-04 — Command Injection via shell=True  (CWE-78)
+  📍 Line 49: result = subprocess.call("ping -c 1 " + hostname, shell=True)
+  ⚠  User input passed to shell command. Attacker can execute arbitrary OS commands: hostname='google.com; rm -rf /'
+  ✅  FIX: Use shell=False with a list: subprocess.call(['ping', '-c', '1', hostname], shell=False). Validate input with allowlist.
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-05 — Insecure Deserialization (pickle)  (CWE-502)
+  📍 Line 57: # VULNERABLE: pickle.loads on untrusted data allows RCE
+  ⚠  pickle.loads() on untrusted data allows attackers to execute arbitrary Python code during deserialization (Remote Code E
+  ✅  FIX: Never deserialize untrusted data with pickle. Use JSON for data exchange: json.loads(data). If pickle is needed, sign th
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-05 — Insecure Deserialization (pickle)  (CWE-502)
+  📍 Line 58: return pickle.loads(data)
+  ⚠  pickle.loads() on untrusted data allows attackers to execute arbitrary Python code during deserialization (Remote Code E
+  ✅  FIX: Never deserialize untrusted data with pickle. Use JSON for data exchange: json.loads(data). If pickle is needed, sign th
+
+──────────────────────────────────────────────────────────────────────
+  🔴 [HIGH] V-07 — Sensitive Data Logged (Password)  (CWE-532)
+  📍 Line 77: print(f"[LOG] Login attempt: username={username}, password={password}")
+  ⚠  Password or other sensitive data is written to logs in plaintext. Log files are often accessible to attackers or stored 
+  ✅  FIX: Never log passwords, tokens, or PII. Log only: username + timestamp + action. Redact sensitive fields before logging.
+
+──────────────────────────────────────────────────────────────────────
+  🟢 [LOW] V-08 — Overly Broad Exception Handling  (CWE-390)
+  📍 Line 89: except:
+  ⚠  Bare 'except:' clause silently swallows ALL exceptions including KeyboardInterrupt and SystemExit, hiding real errors an
+  ✅  FIX: Catch specific exceptions: except ZeroDivisionError as e: logger.error(f'Division error: {e}'). Never use bare except.
+
+──────────────────────────────────────────────────────────────────────
+  🟡 [MEDIUM] V-09 — Cryptographically Weak PRNG  (CWE-338)
+  📍 Line 100: return str(random.randint(100000, 999999))
+  ⚠  Python's random module is a pseudo-random number generator NOT suitable for security. Tokens generated this way are pred
+  ✅  FIX: Use secrets module: import secrets; secrets.token_hex(32) — this uses OS-level CSPRNG.
+
+──────────────────────────────────────────────────────────────────────
+  🟡 [MEDIUM] V-10 — Debug Mode Enabled  (CWE-215)
+  📍 Line 106: DEBUG = True     # VULNERABLE: Debug mode enabled in production
+  ⚠  DEBUG=True in production exposes full stack traces, internal paths, and config data to end users, aiding attacker reconn
+  ✅  FIX: Set DEBUG=False in production. Load environment-specific config: DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+
+  📄 JSON report saved: scan_results.json
+======================================================================
+
+
+=== REPORT COMPLETE ===

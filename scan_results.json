@@ -1,0 +1,92 @@
+[
+  {
+    "id": "V-01",
+    "severity": "HIGH",
+    "cwe": "CWE-798",
+    "title": "Hardcoded Credentials",
+    "line": 18,
+    "code": "DB_PASSWORD   = \"admin123\"          # Hardcoded database password",
+    "description": "Sensitive credential stored directly in source code. If the repo is public, attackers gain immediate access.",
+    "recommendation": "Store secrets in environment variables or a vault (e.g. python-dotenv, AWS Secrets Manager)."
+  },
+  {
+    "id": "V-03",
+    "severity": "HIGH",
+    "cwe": "CWE-327",
+    "title": "Weak Cryptographic Hash (MD5)",
+    "line": 41,
+    "code": "return hashlib.md5(password.encode()).hexdigest()",
+    "description": "MD5 is cryptographically broken. Passwords hashed with MD5/SHA1 can be cracked in seconds using rainbow tables.",
+    "recommendation": "Use bcrypt, argon2, or hashlib.pbkdf2_hmac with salt: import bcrypt; bcrypt.hashpw(password, bcrypt.gensalt())"
+  },
+  {
+    "id": "V-04",
+    "severity": "HIGH",
+    "cwe": "CWE-78",
+    "title": "Command Injection via shell=True",
+    "line": 49,
+    "code": "result = subprocess.call(\"ping -c 1 \" + hostname, shell=True)",
+    "description": "User input passed to shell command. Attacker can execute arbitrary OS commands: hostname='google.com; rm -rf /'",
+    "recommendation": "Use shell=False with a list: subprocess.call(['ping', '-c', '1', hostname], shell=False). Validate input with allowlist."
+  },
+  {
+    "id": "V-05",
+    "severity": "HIGH",
+    "cwe": "CWE-502",
+    "title": "Insecure Deserialization (pickle)",
+    "line": 57,
+    "code": "# VULNERABLE: pickle.loads on untrusted data allows RCE",
+    "description": "pickle.loads() on untrusted data allows attackers to execute arbitrary Python code during deserialization (Remote Code Execution).",
+    "recommendation": "Never deserialize untrusted data with pickle. Use JSON for data exchange: json.loads(data). If pickle is needed, sign the payload with HMAC."
+  },
+  {
+    "id": "V-05",
+    "severity": "HIGH",
+    "cwe": "CWE-502",
+    "title": "Insecure Deserialization (pickle)",
+    "line": 58,
+    "code": "return pickle.loads(data)",
+    "description": "pickle.loads() on untrusted data allows attackers to execute arbitrary Python code during deserialization (Remote Code Execution).",
+    "recommendation": "Never deserialize untrusted data with pickle. Use JSON for data exchange: json.loads(data). If pickle is needed, sign the payload with HMAC."
+  },
+  {
+    "id": "V-07",
+    "severity": "HIGH",
+    "cwe": "CWE-532",
+    "title": "Sensitive Data Logged (Password)",
+    "line": 77,
+    "code": "print(f\"[LOG] Login attempt: username={username}, password={password}\")",
+    "description": "Password or other sensitive data is written to logs in plaintext. Log files are often accessible to attackers or stored insecurely.",
+    "recommendation": "Never log passwords, tokens, or PII. Log only: username + timestamp + action. Redact sensitive fields before logging."
+  },
+  {
+    "id": "V-08",
+    "severity": "LOW",
+    "cwe": "CWE-390",
+    "title": "Overly Broad Exception Handling",
+    "line": 89,
+    "code": "except:",
+    "description": "Bare 'except:' clause silently swallows ALL exceptions including KeyboardInterrupt and SystemExit, hiding real errors and bugs.",
+    "recommendation": "Catch specific exceptions: except ZeroDivisionError as e: logger.error(f'Division error: {e}'). Never use bare except."
+  },
+  {
+    "id": "V-09",
+    "severity": "MEDIUM",
+    "cwe": "CWE-338",
+    "title": "Cryptographically Weak PRNG",
+    "line": 100,
+    "code": "return str(random.randint(100000, 999999))",
+    "description": "Python's random module is a pseudo-random number generator NOT suitable for security. Tokens generated this way are predictable.",
+    "recommendation": "Use secrets module: import secrets; secrets.token_hex(32) \u2014 this uses OS-level CSPRNG."
+  },
+  {
+    "id": "V-10",
+    "severity": "MEDIUM",
+    "cwe": "CWE-215",
+    "title": "Debug Mode Enabled",
+    "line": 106,
+    "code": "DEBUG = True     # VULNERABLE: Debug mode enabled in production",
+    "description": "DEBUG=True in production exposes full stack traces, internal paths, and config data to end users, aiding attacker reconnaissance.",
+    "recommendation": "Set DEBUG=False in production. Load environment-specific config: DEBUG = os.getenv('DEBUG', 'False') == 'True'"
+  }
+]
